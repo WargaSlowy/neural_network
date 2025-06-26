@@ -2,7 +2,6 @@
 #define OPERASI_VEKTOR_HPP_
 
 #include <iostream>
-#include <iterator>
 #include <ostream>
 #include <valarray>
 
