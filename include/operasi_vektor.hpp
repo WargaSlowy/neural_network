@@ -1,12 +1,8 @@
 #ifndef OPERASI_VEKTOR_HPP_
 #define OPERASI_VEKTOR_HPP_
 
-// 3.1472671272
-// 3.14, 2.71
-//
-// (3.14, 2.71)
-
 #include <iostream>
+#include <iterator>
 #include <ostream>
 #include <valarray>
 
@@ -40,7 +36,7 @@ std::ostream &operator<<(std::ostream &out, const std::pair<T, T> &A) {
  * @param out output stream untuk std::cout
  * @param A valarray yang ingin ditampilkan
  * @return std::ostream& referensi ke outpu std::coutnya
-*/
+ */
 template <typename T>
 std::ostream &operator<<(std::ostream &out, const std::valarray<T> &A) {
   // set nilai presisinya menjadi 4 digit desimal
@@ -53,6 +49,34 @@ std::ostream &operator<<(std::ostream &out, const std::valarray<T> &A) {
   }
   std::cout << std::endl;
   return out;
+}
+
+/**
+ * @brief menambahkan elemen baru ke akhir dari std::valarray
+ *
+ * karena si valarray ini tadi tidak bisa di resize secara dynamic
+ * maka kita akan membuat valarray baru dengan ukuran ditambahkan 1
+ *
+ * @tparam T tipe data elemen
+ * @param A valarray aslinya
+ * @param elemen elemen yang ingin ditambahkan
+ * @return std::valarray<T> valarray baru dari elemen yang lama
+ */
+template <typename T>
+std::valarray<T> insert_element(const std::valarray<T> &A, const T &elemen) {
+  // kita membuat valarray baru dengan ukuran nantinya ditambahkan
+  // dengan 1
+  std::valarray<T> B;
+
+  // fungsi untuk menambahkan satu elemen
+  B.resize(A.size() + 1);
+  // kita salin valarray lama ke valarray baru
+  for (size_t i = 0; i < A.size(); i++) {
+    B[i] = A[i];
+  }
+  // kita tambahin nilai baru di elemen si B
+  B[B.size() - 1] = elemen;
+  return B;
 }
 
 #endif // !OPERASI_VEKTOR_HPP_
