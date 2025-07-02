@@ -1,4 +1,5 @@
 #include "include/operasi_vektor.hpp"
+#include <algorithm>
 #include <iterator>
 #include <utility>
 #include <valarray>
@@ -23,32 +24,95 @@ int main() {
   // data_kita = pop_back(data_kita);
   // std::cout << "sesudah fungsi dari pop back: " << data_kita << std::endl;
 
-  std::vector<std::vector<std::valarray<double>>> A = {
-      {{1.1, 2.2}}, {{3.3, 4.4}}, {{5.5, 6.6}}};
+  // std::vector<std::vector<std::valarray<double>>> A = {
+  //     {{1.1, 2.2}}, {{3.3, 4.4}}, {{5.5, 6.6}}};
+  //
+  // std::vector<std::vector<std::valarray<double>>> B = {
+  //     {{10.0}},
+  //     {{20.0}},
+  //     {{30.0}},
+  // };
+  //
+  // std::cout << "sebelum adanya shuffling:\n";
+  // for (size_t i = 0; i < A.size(); ++i) {
+  //   std::cout << "A[" << i << "] = {" << A[i][0][0] << ", " << A[i][0][1]
+  //             << "} -> ";
+  //   std::cout << "B[ " << i << "] = {" << B[i][0][0] << "}\n";
+  // }
+  //
+  // equal_shuffle(A, B);
+  // std::cout << std::endl;
+  // std::cout << "setelah shuffle:";
+  // for (size_t i = 0; i < A.size(); ++i) {
+  //   std::cout << "A[" << i << "] = {" << A[i][0][0] << ", " << A[i][0][1]
+  //             << "} -> ";
+  //   std::cout << "B[ " << i << "] = {" << B[i][0][0] << "}\n";
+  // }
 
-  std::vector<std::vector<std::valarray<double>>> B = {
-      {{10.0}},
-      {{20.0}},
-      {{30.0}},
-  };
+  // std::vector<std::valarray<double>> matriks;
+  // std::pair<size_t, size_t> shape = {3, 4};
+  // double low = 0.0, high = 1.0;
+  //
+  // uniform_random_intialization(matriks, shape, low, high);
+  //
+  // std::cout.precision(4);
+  // std::cout << "matriks hasil inisialisasi yang kita acak:" << std::endl;
+  // for (const auto &baris : matriks) {
+  //   std::cout << baris << std::endl;
+  // }
 
-  std::cout << "sebelum adanya shuffling:\n";
-  for (size_t i = 0; i < A.size(); ++i) {
-    std::cout << "A[" << i << "] = {" << A[i][0][0] << ", " << A[i][0][1]
-              << "} -> ";
-    std::cout << "B[ " << i << "] = {" << B[i][0][0] << "}\n";
-  }
+  // std::vector<std::valarray<double>> matriks;
+  // std::pair<size_t, size_t> shape = {3, 4};
+  //
+  // unit_matrix_intialization(matriks, shape);
+  //
+  // std::cout << "matriks hasil inisialisasi matriks indentitas:" << std::endl;
+  // for (const auto &baris : matriks) {
+  //   std::cout << baris;
+  // }
 
-  equal_shuffle(A, B);
-  std::cout << std::endl;
-  std::cout << "setelah shuffle:";
-  for (size_t i = 0; i < A.size(); ++i) {
-    std::cout << "A[" << i << "] = {" << A[i][0][0] << ", " << A[i][0][1]
-              << "} -> ";
-    std::cout << "B[ " << i << "] = {" << B[i][0][0] << "}\n";
-  }
+  // std::vector<std::valarray<double>> matriks;
+  // std::pair<size_t, size_t> shape = {4, 4};
+  // zero_initialization(matriks, shape);
+  //
+  // for (const auto &baris : matriks) {
+  //   for (double value : baris) {
+  //     std::cout << value << " ";
+  //   }
+  //   std::cout << std::endl;
+  // }
 
-  hitung::angka;
+  // std::vector<std::valarray<int>> matriks = {
+  // {1, 2, 3},
+  // {4, 5, 6},
+  // };
+  //
+  // int total = sum(matriks);
+  // std::cout << "totalnya adalah: " << total << std::endl;
+
+  // std::vector<std::valarray<int>> matriks = {
+  //     {1, 2, 3},
+  //     {4, 5, 4},
+  //     {6, 7, 8},
+  // };
+  //
+  // auto shape = get_shape(matriks);
+  // std::cout << "ukuran dari matriks adalah: " << shape.first << " x "
+  //           << shape.second << std::endl;
+
+  // std::vector<std::vector<std::valarray<double>>> dataset = {
+  //     {{1.0, 2.0}}, {{3.0, 4.0}}, {{5.0, 6.0}}};
+  //
+  // auto normalisasi = minmax_scaling(dataset, 0.0, 1.0);
+  //
+  // for (const auto &sampel : normalisasi) {
+  //   for (const auto &layer : sampel) {
+  //     for (double value : layer) {
+  //       std::cout << value << " ";
+  //     }
+  //     std::cout << std::endl;
+  //   }
+  // }
 
   return 0;
 }

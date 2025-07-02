@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <ostream>
+#include <random>
 #include <utility>
 #include <valarray>
 #include <vector>
@@ -157,6 +158,194 @@ void equal_shuffle(std::vector<std::vector<std::valarray<T>>> &A,
     std::swap(B[i], B[random_index]);
   }
   return;
+}
+
+/**
+ * @brief fungsi untuk inialisasi dengan nilai random yang tersebar nantinya
+ * secara seragam (uniform) dalam suatu rentang tertentu
+ *
+ * @tparam T tipe data yang diberikan
+ * @param A vektor yang diberikan
+ * @param shape ukuran dari vektor
+ * @param low nilai terkecil
+ * @param high nilai tertinggi
+ */
+template <typename T>
+void uniform_random_intialization(std::vector<std::valarray<T>> &A,
+                                  const std::pair<size_t, size_t> &shape,
+                                  const T &low, const T &high) {
+  // clear value yang terdapat pada vektor A
+  A.clear();
+  // generator untuk bilangan random
+  // menggunakan default_random_engine
+  // - aman
+  // - lebih akurat
+  // - fleksibel
+  std::default_random_engine generator(
+      // seeding acak berdasarkan waktu dari sistem
+      // memastikan bahwasanya tiap kali program dijalankan
+      // hasilnya akan selalu berbeda
+      std::chrono::system_clock::now().time_since_epoch().count());
+  // akan menghasilkan angka random antara low dan high nya tadi
+  std::uniform_real_distribution<T> distribusi_nilai(low, high);
+  // looping untuk membuat matriks sesuai ukuran dari si shape
+  for (size_t i = 0; i < shape.first; i++) {
+    std::valarray<T> baris;
+    baris.resize(shape.second);
+    for (auto &b : baris) {
+      b = distribusi_nilai(generator);
+    }
+    A.push_back(baris);
+  }
+  return;
+}
+
+/**
+ * @brief fungsi untuk inialisasi sebagai matriks nantinya untuk matriks
+ * identitas
+ *
+ * @tparam T tipe data yang diberikan nantinya
+ * @param A vektor yang nantikan akan dibuat matriks identitas
+ * @param shape ukuran vektor yang diberikan
+ */
+template <typename T>
+void unit_matrix_intialization(std::vector<std::valarray<T>> &A,
+                               std::pair<size_t, size_t> &shape) {
+  // menghapus elemen value yang terdapat pada matriks
+  A.clear();
+  // looping per baris dari tiap si vektor
+  for (size_t i = 0; i < shape.first; i++) {
+    // setiap barisnya nantinya akan diisi nilai awal 0
+    // lalu kita akan ubah elemen ke i nya menjadi 1
+    // yang nantinya membuat efek diagonal
+    std::valarray<T> baris;
+    baris.resize(shape.second);
+    baris[i] = T(1);
+    A.push_back(baris);
+  }
+  return;
+}
+
+/**
+ * @brief fungsi untuk membuat matriks nol
+ *
+ * @tparam T tipe data yang diberikan
+ * @param A vektor yang akan dibuat matriks nol
+ * @param shape ukuran dari sebuah matriks yang akan dibuat
+ */
+template <typename T>
+void zero_initialization(std::vector<std::valarray<T>> &A,
+                         const std::pair<size_t, size_t> &shape) {
+  // jika ada data sebelumnya maka kita hapus denga fungsi clear
+  A.clear();
+  // looping untuk setiap dari baris
+  for (size_t i = 0; i < shape.first; i++) {
+    // membuat satu baris dengan ukuran dari shape second
+    // setiap baris adalah object yang akan di resize ke ukuran yang
+    // pas, semua elemen nantinya akan ototmatis diinialisasi ke default
+    // nilainya (disini nilainya adalah 0)
+    std::valarray<T> baris;
+    baris.resize(shape.second);
+    A.push_back(baris);
+  }
+  return;
+}
+
+/**
+ * @brief fungsi untuk menjumlahkan semua nilai dalam seluruh baris dan kolom
+ * dari matriks
+ *
+ * @tparam T tipe data yang diberikan
+ * @param A matriks yang akan dihitung baris dan kolomnya
+ * @return T hasil dari hitung semua baris dan kolom (value)
+ */
+template <typename T> T sum(const std::vector<std::valarray<T>> &A) {
+  // inialisasi hasil untuk menampung jumlah total
+  T hasil = 0;
+  // looping tiap elemen pada matriks
+  for (const auto &matriks : A) {
+    // a.sum() (sum adalah fungsi bawaan dari si std::valarray) yang akan
+    // ngejumlahin semua elemen dalam baris tersebut
+    hasil += matriks.sum();
+  }
+  return hasil;
+}
+
+/**
+ * @brief fungsi untuk mengabil jumlah ukuran baris dan kolom dari vektor
+ *
+ * @tparam T tipe data yang akan diberikan
+ * @param A vektor yang akan dihitung baris dan kolomnya
+ * @return std::pair<size_t, size_t> jumlah ukuran baris dan kolom dari vektor
+ */
+template <typename T>
+std::pair<size_t, size_t> get_shape(const std::vector<std::valarray<T>> &A) {
+  const size_t sub_ukuran =
+      (
+          // iterator ke baris pertama
+          // ini adalah bagian dari object dari baris pertama si A
+          *A.begin())
+          .size(); // jumlah elemen dalam baris (ini adalah jumlah dari si
+                   // kolom)
+
+  for (const auto &a : A) {
+    if (a.size() != sub_ukuran) {
+      std::cerr << "ERROR di fungsi " << __func__ << ": ";
+      std::cerr << "panjang matriks / vektor tidak sama" << std::endl;
+      std::exit(EXIT_FAILURE);
+    }
+  }
+  // return dari jumlah baris dan kolom
+  return std::make_pair(A.size(),  // jumlah dari baris
+                        sub_ukuran // jumlah dari kolomnya
+  );
+}
+
+/**
+ * @brief fungsi untuk normalisasi data dengan menggunakan metode rumus minmax
+ *
+ * @tparam T tipe template dari suatu tipe data
+ * @param A vektor yang akan di normalisasikan
+ * @param low nilai rendah
+ * @param high nilai tinggi
+ */
+template <typename T>
+std::vector<std::vector<std::valarray<T>>>
+minmax_scaling(const std::vector<std::vector<std::valarray<T>>> &A,
+               const T &low, const T &high) {
+  // kita buat salinan dari input agar tidak ngerusakin data aslinya
+  std::vector<std::vector<std::valarray<T>>> B = A;
+  // fungsi untuk mengembalikan baris dan kolom dari B elemen 0
+  const auto shape = get_shape(B[0]);
+  // cek validasi dari vektor
+  if (shape.first != 1) {
+    std::cerr << "ERROR di fungsi " << __func__ << ": ";
+    std::cerr << "vektor yang diberikan tidak support untuk normalisasi data, "
+                 "shape: ";
+    std::cerr << shape << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+
+  // looping per kolom
+  for (size_t i = 0; i < shape.second; /* ini adalah jumlah kolom */ i++) {
+    // untuk setiap fitur dari i, kita akan cari nilai terkecil dan terbesar
+    // di seluruh sampel atau kolom
+    // fungsi ini penting banget karena normalisasi dilakukan berdasarkan
+    // distribusi fitur
+    T min = B[0][0][i], max = B[0][0][i];
+    for (size_t j = 0; j < B.size(); j++) {
+      min = std::min(min, B[j][0][i]);
+      max = std::max(max, B[j][0][i]);
+    }
+
+    // gass fungsi minmax scaling
+    // return semua nilai fitur dari i akan berada dalam rentang low dan high
+    for (size_t j = 0; j < B.size(); j++) {
+      B[j][0][i] = ((B[j][0][i] - min) / (max - min)) * (high - low) + low;
+    }
+  }
+
+  return B;
 }
 
 #endif // !OPERASI_VEKTOR_HPP_
