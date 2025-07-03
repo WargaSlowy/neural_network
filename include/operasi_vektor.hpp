@@ -1,9 +1,11 @@
 #ifndef OPERASI_VEKTOR_HPP_
 #define OPERASI_VEKTOR_HPP_
 
+#include <algorithm>
 #include <chrono>
 #include <cstdlib>
 #include <iostream>
+#include <iterator>
 #include <ostream>
 #include <random>
 #include <utility>
@@ -346,6 +348,206 @@ minmax_scaling(const std::vector<std::vector<std::valarray<T>>> &A,
   }
 
   return B;
+}
+
+/**
+ * @brief fungsi untuk mencari posisi (indeks) dari elemen terbesar dalam satu
+ * baris data
+ *
+ * @tparam T tipe data vektor yang diberikan
+ * @param A vektor yang akan dihitung argmax nya
+ * @return size_t posisi indeks yang dimana terdapat nilai tertingginya
+ */
+template <typename T> size_t argmax(const std::vector<std::valarray<T>> &A) {
+  // untuk validasi format data
+  // (jumlah baris, jumlah kolom)
+  const auto shape = get_shape(A);
+
+  // validasi apakah data nantinya berupa vektor baris tunggal
+  if (shape.first != 1) {
+    // jika jumlah baris bukan 1 maka error, karena fungsi ini hanya akan bisa
+    // dipakai untuk vektor baris tunggal
+    std::cerr << "ERROR di fungsi " << __func__ << ": ";
+    std::cerr << "vektor yang diberikan tidak support untuk fungsi argmax"
+              << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+
+  return std::distance(std::begin(A[0]),
+                       std::max_element(std::begin(A[0]), std::end(A[0])));
+}
+
+/**
+ * @brief fungsi untuk mengkalikan setiap elemen dalam matriks / vektor dengan
+ * nilai skalar yang diberikan
+ *
+ * @tparam T tipe data yang diberikan
+ * @param A vektor yang akan dikalikan dengan nilai skalar
+ * @param value nilai skalar
+ * @return std::vector<std::valarray<T>> hasil vektor dari perkalian skalar
+ */
+template <typename T>
+std::vector<std::valarray<T>> operator*(const std::vector<std::valarray<T>> &A,
+                                        const T &value) {
+  // menyalin data dari input parameter ke variabel lokal
+  std::vector<std::valarray<T>> B = A;
+  // looping melalui setiap baris dan kita kalikan dengan nilai
+  // skalar
+  for (auto &baris : B) {
+    baris = baris * value;
+  }
+  return B;
+}
+
+/**
+ * @brief fungsi untuk menambahkan setiap elemen dalam matriks / vektor dengan
+ * nilai skalar yang diberikan
+ *
+ * @tparam T tipe data yang diberikan
+ * @param A vektor yang akan ditambahkan dengan nilai skalar
+ * @param value nilai skalar
+ * @return std::vector<std::valarray<T>> hasil vektor dari pertambahan skalar
+ */
+template <typename T>
+std::vector<std::valarray<T>> operator+(const std::vector<std::valarray<T>> &A,
+                                        const T &value) {
+  // menyalin data dari input parameter ke variabel lokal
+  std::vector<std::valarray<T>> B = A;
+  // looping melalui setiap baris dan kita tambahkan dengan nilai
+  // skalar
+  for (auto &baris : B) {
+    baris = baris + value;
+  }
+  return B;
+}
+
+/**
+ * @brief fungsi untuk membagikan setiap elemen dalam matriks / vektor dengan
+ * nilai skalar yang diberikan
+ *
+ * @tparam T tipe data yang diberikan
+ * @param A vektor yang akan dibagikan dengan nilai skalar
+ * @param value nilai skalar
+ * @return std::vector<std::valarray<T>> hasil vektor dari pembagian skalar
+ */
+template <typename T>
+std::vector<std::valarray<T>> operator/(const std::vector<std::valarray<T>> &A,
+                                        const T &value) {
+  // menyalin data dari input parameter ke variabel lokal
+  std::vector<std::valarray<T>> B = A;
+  // looping melalui setiap baris dan kita bagikan dengan nilai
+  // skalar
+  for (auto &baris : B) {
+    baris = baris / value;
+  }
+  return B;
+}
+
+/**
+ * @brief fungsi untuk transpose matriks
+ *
+ * @tparam T tipe data yang diberikan
+ * @param A vektor yang akan di transpose
+ * @return std::vector<std::valarray<T>> hasil transpose dari matriks yang
+ * diberikan
+ */
+template <typename T>
+std::vector<std::valarray<T>>
+transpose(const std::vector<std::valarray<T>> &A) {
+  // fungsi untuk mengembalikan sebuah ukuran matriks dalam bentuk
+  // jumlah baris dan jumlah kolom
+  const auto shape = get_shape(A);
+  // kita buat salinan untuk matriks A ke B
+  std::vector<std::valarray<T>> B;
+
+  // loop per kolom untuk membuat sebuah baris baru
+  for (size_t j = 0; j < shape.second; j++) {
+    // buat satu baris untuk matriks transpose
+    // panjang baris sama dengan jumlah baris dari matriks aslinya
+    // karena baris baru berasal dari kolom yang lama
+    std::valarray<T> baris;
+    baris.resize(shape.first);
+    // looping untuk mengisi baris baru dengan elemen dari si kolom
+    // ambil elemen ke-i dari kolom si j dari matriks aslinya (A),
+    // lalu kita masukin ke baris `baris`
+    for (size_t i = 0; i < shape.first; i++) {
+      baris[i] = A[i][j];
+    }
+    B.push_back(baris);
+  }
+  return B;
+}
+
+/**
+ * @brief fungsi untuk menjumlahkan dua matriks elemen per elemen, selama ukuran
+ * yang diberikan sama
+ *
+ * @tparam T tipe data yang diberikan
+ * @param A vektor nilai pertama
+ * @param B vektor nilai kedua
+ * @return std::vector<std::valarray<T>> hasil pejumlahan matriks antara A dan B
+ */
+template <typename T>
+std::vector<std::valarray<T>>
+operator+(const std::vector<std::valarray<T>> &A,
+          const std::vector<std::valarray<T>> &B) {
+  // mengambil ukuran atau shape dari tiap matriks
+  const auto shape_a = get_shape(A);
+  const auto shape_b = get_shape(B);
+
+  // cek validasi apakah si kolom dan baris dari vektor atau matriks A dan B
+  // sama
+  if (shape_a.first != shape_b.first || shape_a.second != shape_b.second) {
+    std::cerr << "ERROR di fungsi " << __func__ << ": ";
+    std::cerr << "vektor yang diberikan memiliki shape yang berbeda: ";
+    std::cerr << shape_a << " dan " << shape_b << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+
+  // matriks baru tempat simpan hasil penjumlahan antara A dan B
+  std::vector<std::valarray<T>> C;
+  // looping melalui setiap baris dan kita lakukan penjumlahan
+  for (size_t i = 0; i < A.size(); i++) {
+    // kita tambahkan lalu masukkan ke dalam vektor si C
+    C.push_back(A[i] + B[i]);
+  }
+  return C;
+}
+
+/**
+ * @brief fungsi untuk mengurangkan dua matriks elemen per elemen, selama ukuran
+ * yang diberikan sama
+ *
+ * @tparam T tipe data yang diberikan
+ * @param A vektor nilai pertama
+ * @param B vektor nilai kedua
+ * @return std::vector<std::valarray<T>> hasil pengurangan matriks antara A dan B
+ */
+template <typename T>
+std::vector<std::valarray<T>>
+operator-(const std::vector<std::valarray<T>> &A,
+          const std::vector<std::valarray<T>> &B) {
+  // mengambil ukuran atau shape dari tiap matriks
+  const auto shape_a = get_shape(A);
+  const auto shape_b = get_shape(B);
+
+  // cek validasi apakah si kolom dan baris dari vektor atau matriks A dan B
+  // sama
+  if (shape_a.first != shape_b.first || shape_a.second != shape_b.second) {
+    std::cerr << "ERROR di fungsi " << __func__ << ": ";
+    std::cerr << "vektor yang diberikan memiliki shape yang berbeda: ";
+    std::cerr << shape_a << " dan " << shape_b << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+
+  // matriks baru tempat simpan hasil penjumlahan antara A dan B
+  std::vector<std::valarray<T>> C;
+  // looping melalui setiap baris dan kita lakukan penjumlahan
+  for (size_t i = 0; i < A.size(); i++) {
+    // kita kurangkan lalu masukkan ke dalam vektor si C
+    C.push_back(A[i] - B[i]);
+  }
+  return C;
 }
 
 #endif // !OPERASI_VEKTOR_HPP_

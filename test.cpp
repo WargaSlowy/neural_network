@@ -114,5 +114,58 @@ int main() {
   //   }
   // }
 
+  // std::vector<std::valarray<double>> nilai_kita = {
+  //     {2.0, 1.0, 5.0, 8.3, 4.2},
+  // };
+  //
+  // size_t indeks_tertinggi = argmax(nilai_kita);
+  // std::cout << "indeks nilai maksimum terdapat di elemen ke -> "
+  //           << indeks_tertinggi << std::endl;
+
+  // std::vector<std::valarray<int>> matriks_kita = {
+  //     {1, 2},
+  //     {5, 3},
+  // };
+  //
+  // std::vector<std::valarray<int>> B = matriks_kita * 3;
+  // for (const auto &baris : B) {
+  //   for (int value : baris) {
+  //     std::cout << value << " ";
+  //   }
+  //   std::cout << std::endl;
+  // }
+
+  // std::vector<std::valarray<double>> matriks_kita = {
+  //     {1.3, 2.30, 3.3},
+  //     {4.20, 5.5, 6.10},
+  // };
+  //
+  // std::vector<std::valarray<double>> B = transpose(matriks_kita);
+  // std::cout << "hasilnya: " << std::endl;
+  // for (const auto &baris : B) {
+  //   for (double value : baris) {
+  //     std::cout << value << " ";
+  //   }
+  //   std::cout << std::endl;
+  // }
+
+  // std::vector<std::valarray<int>> vektor_kita = {
+  //     {1, 2},
+  //     {3, 4},
+  // };
+  //
+  // std::vector<std::valarray<int>> matriks_kita_B = {
+  //     {5, 6},
+  //     {7, 8},
+  // };
+  //
+  // std::vector<std::valarray<int>> C = vektor_kita + matriks_kita_B;
+  // for (const auto &baris : C) {
+  //   for (int value : baris) {
+  //     std::cout << value << " ";
+  //   }
+  //   std::cout << std::endl;
+  // }
+
   return 0;
 }
