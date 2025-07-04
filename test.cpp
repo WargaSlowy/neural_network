@@ -167,16 +167,32 @@ int main() {
   //   std::cout << std::endl;
   // }
 
-  std::vector<std::valarray<int>> matriks_a = {{1, 2, 3}, {4, 5, 6}};
-  std::vector<std::valarray<int>> matriks_b = {
-      {7, 8},
-      {9, 10},
-      {11, 12},
-  };
+  // std::vector<std::valarray<int>> matriks_a = {{1, 2, 3}, {4, 5, 6}};
+  // std::vector<std::valarray<int>> matriks_b = {
+  //     {7, 8},
+  //     {9, 10},
+  //     {11, 12},
+  // };
+  //
+  // std::vector<std::valarray<int>> hasil =
+  //     OperasiVektor::multiply(matriks_a, matriks_b);
+  // std::cout << "hasilnya adalah: " << std::endl;
+  // for (const auto &baris : hasil) {
+  //   for (int value : baris) {
+  //     std::cout << value << " ";
+  //   }
+  //   std::cout << std::endl;
+  // }
 
-  std::vector<std::valarray<int>> hasil =
-      OperasiVektor::multiply(matriks_a, matriks_b);
-  std::cout << "hasilnya adalah: " << std::endl;
+  std::vector<std::valarray<int>> matriks_a = {
+      {1, 2},
+      {3, 4},
+  };
+  std::vector<std::valarray<int>> matriks_b = {{5, 6}, {7, 8}};
+
+  auto hasil = OperasiVektor::hadamard_product(matriks_a, matriks_b);
+
+  std::cout << "hasil hadamard_product " << std::endl;
   for (const auto &baris : hasil) {
     for (int value : baris) {
       std::cout << value << " ";

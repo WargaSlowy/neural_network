@@ -601,6 +601,42 @@ std::vector<std::valarray<T>> multiply(const std::vector<std::valarray<T>> &A,
   return hasil;
 }
 
+/**
+ * @brief fungsi untuk mengalikan elemen yang terdapat pada dua vektor / matriks
+ *
+ * @tparam T tipe data yang akan diberikan
+ * @param A vektor yang akan dikalikan dengan si B
+ * @param B vektor yang akan dikalikan dengan si A
+ * @return std::vector<std::valarray<T>> hasil perkalian elemen antara A dan B
+ */
+template <typename T>
+std::vector<std::valarray<T>>
+hadamard_product(const std::vector<std::valarray<T>> &A,
+                 const std::vector<std::valarray<T>> &B) {
+  // cari ukuran dari setiap vektor
+  const auto shape_a = get_shape(A);
+  const auto shape_b = get_shape(B);
+
+  // cek validasi untuk kolom dan baris antara kedua vektor
+  // jika kolom dan baris dari vektor tidak sama maka kita throw error
+  if (shape_a.first != shape_b.first || shape_a.second != shape_b.second) {
+    std::cerr << "ERROR di fungsi " << __func__ << ": ";
+    std::cerr << "vektor tidak bisa dilakukan operasi hadamard karena berbeda "
+                 "dimensi";
+    std::exit(EXIT_FAILURE);
+  }
+
+  // buat vektor untuk menyimpan hasil perkalian tiap elemen antara
+  // dua matriks
+  std::vector<std::valarray<T>> hasil;
+  // looping nilainya tiap baris
+  for (size_t i = 0; i < A.size(); ++i) {
+    // lakukan perkalian dan masukin hasilnya ke dalam vektor hasil
+    hasil.push_back(A[i] * B[i]);
+  }
+  return hasil;
+}
+
 } // namespace OperasiVektor
 
 #endif // !OPERASI_VEKTOR_HPP_
