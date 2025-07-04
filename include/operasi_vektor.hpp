@@ -12,6 +12,7 @@
 #include <valarray>
 #include <vector>
 
+namespace OperasiVektor {
 /**
  * @brief menampilkan kostum output ke output stream std::cout
  *
@@ -521,7 +522,8 @@ operator+(const std::vector<std::valarray<T>> &A,
  * @tparam T tipe data yang diberikan
  * @param A vektor nilai pertama
  * @param B vektor nilai kedua
- * @return std::vector<std::valarray<T>> hasil pengurangan matriks antara A dan B
+ * @return std::vector<std::valarray<T>> hasil pengurangan matriks antara A dan
+ * B
  */
 template <typename T>
 std::vector<std::valarray<T>>
@@ -542,12 +544,63 @@ operator-(const std::vector<std::valarray<T>> &A,
 
   // matriks baru tempat simpan hasil penjumlahan antara A dan B
   std::vector<std::valarray<T>> C;
-  // looping melalui setiap baris dan kita lakukan penjumlahan
+  // looping mel113alui setiap baris dan kita lakukan penjumlahan
   for (size_t i = 0; i < A.size(); i++) {
     // kita kurangkan lalu masukkan ke dalam vektor si C
     C.push_back(A[i] - B[i]);
   }
   return C;
 }
+
+/**
+ * @brief fungsi untuk menghitung hasil perkalian antara 2 matriks
+ *
+ * @tparam T tipe data yang diberikan
+ * @param A vektor yang memiliki kolom yang sama dengan si vektor / matriks B
+ * @param B vektor yang memiliki baris yang sama dengan si vektor / matriks A
+ * @return std::vector<std::valarray<T>> hasil dari perkalian antara 2 vektor a
+ * dan b
+ */
+template <typename T>
+std::vector<std::valarray<T>> multiply(const std::vector<std::valarray<T>> &A,
+                                       const std::vector<std::valarray<T>> B) {
+  // ambil ukuran dari tiap vektor yang diberikan
+  const auto shape_a = get_shape(A);
+  const auto shape_b = get_shape(B);
+
+  // cek validasi antara 2 vektor
+  // jika kolom dari vektor a itu tidak sama dari baris si vektor b
+  // maka akan throw error
+  if (shape_a.second != shape_b.first) {
+    std::cerr << "ERROR di fungsi " << __func__ << ": ";
+    std::cerr << "vektor ini tidak bisa digunakan untuk oeprasi perkaian "
+                 "karena baris dan kolom berbeda";
+    std::cerr << shape_a << " dan " << shape_b << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+
+  // buat vektor dengan nama variabelnya hasil
+  std::vector<std::valarray<T>> hasil;
+  // looping melalui tiap baris dari vektor si A
+  for (size_t i = 0; i < shape_a.first; i++) {
+    // buat baris baru untuk matriks si hasil
+    // panjang baris baru sama dengan jumlah kolom dari si matriks B
+    std::valarray<T> baris;
+    baris.resize(shape_b.second);
+    for (size_t j = 0; j < shape_b.second; j++) {
+      for (size_t k = 0; k < shape_a.second; k++) {
+        // hitung nilai elemen matriks hasil perkalian
+        // ambil elemen -k dari baris i di matriks A
+        // kalikan dengan elemen J dari kolom k di matriks B
+        // tambahkan ke elemen hasil dari baris[j]
+        baris[j] += A[i][k] * B[k][j];
+      }
+    }
+    hasil.push_back(baris);
+  }
+  return hasil;
+}
+
+} // namespace OperasiVektor
 
 #endif // !OPERASI_VEKTOR_HPP_
