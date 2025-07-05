@@ -8,11 +8,10 @@
 #include <iterator>
 #include <ostream>
 #include <random>
-#include <utility>
 #include <valarray>
+#include <utility>
 #include <vector>
 
-namespace OperasiVektor {
 /**
  * @brief menampilkan kostum output ke output stream std::cout
  *
@@ -213,7 +212,7 @@ void uniform_random_intialization(std::vector<std::valarray<T>> &A,
  */
 template <typename T>
 void unit_matrix_intialization(std::vector<std::valarray<T>> &A,
-                               std::pair<size_t, size_t> &shape) {
+                               const std::pair<size_t, size_t> &shape) {
   // menghapus elemen value yang terdapat pada matriks
   A.clear();
   // looping per baris dari tiap si vektor
@@ -376,6 +375,16 @@ template <typename T> size_t argmax(const std::vector<std::valarray<T>> &A) {
 
   return std::distance(std::begin(A[0]),
                        std::max_element(std::begin(A[0]), std::end(A[0])));
+}
+
+template <typename T>
+std::vector<std::valarray<T>>
+apply_function(const std::vector<std::valarray<T>> &A, T (*func)(const T &)) {
+  std::vector<std::valarray<T>> B = A;
+  for (auto &b : B) {
+    b = b.apply(func);
+  }
+  return B;
 }
 
 /**
@@ -637,6 +646,5 @@ hadamard_product(const std::vector<std::valarray<T>> &A,
   return hasil;
 }
 
-} // namespace OperasiVektor
 
 #endif // !OPERASI_VEKTOR_HPP_

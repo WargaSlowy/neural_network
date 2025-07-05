@@ -2,7 +2,9 @@
 #define FUNCTION_HPP_
 
 #include <cmath>
-namespace FungsiAktivasi {
+
+namespace Fungsi {
+namespace Aktivasi {
 
 /**
  * @brief fungsi sigmoid
@@ -61,5 +63,27 @@ double tanh(const double &x) { return 2.0 / (1.0 + std::exp(-2.0 * x)) - 1.0; }
  */
 double tanh_derivatif(const double &y) { return 1.0 - y * y; }
 
-} // namespace FungsiAktivasi
+} // namespace Aktivasi
+
+namespace Helper {
+
+/**
+ * @brief fungsi identitas untuk transformasi non-linear nantinya di bagian
+ * akhir data
+ *
+ * @param x nilai yang akan di return
+ * @return double hasil dari fungsi identitas
+ */
+double identitas(const double &x) { return x; }
+
+/**
+ * @brief fungsi square
+ *
+ * @param x nilai yang akan di square dengan x
+ * @return int hasil square dari nilai x
+ */
+double square(const double &x) { return x * x; }
+} // namespace Helper
+
+} // namespace Fungsi
 #endif // !FUNCTION_HPP_
