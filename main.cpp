@@ -130,11 +130,13 @@ private:
     std::vector<std::vector<std::valarray<double>>> details;
     std::vector<std::valarray<double>> current_pass = X;
     details.emplace_back(X);
+
     for (const auto &l : layers) {
-      current_pass = ::multiply(current_pass, l.kernels);
+      current_pass = current_pass * l.kernels;
       current_pass = ::apply_function(current_pass, l.fungsi_aktivasi);
       details.emplace_back(current_pass);
     }
+
     return details;
   }
 
@@ -295,8 +297,8 @@ public:
                 apply_function(aktivasi[j + 1],
                                this->layers[j].derivatif_fungsi_aktivasi));
 
-            grad = multiply(transpose(aktivasi[j]), cur_error);
-            cur_error = multiply(cur_error, transpose(this->layers[j].kernels));
+            grad = transpose(aktivasi[j]) * cur_error;
+            cur_error = cur_error * transpose(this->layers[j].kernels);
             gradient[j] = gradient[j] + grad / double(batch_size);
           }
 
