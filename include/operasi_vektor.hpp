@@ -571,8 +571,8 @@ operator-(const std::vector<std::valarray<T>> &A,
  * dan b
  */
 template <typename T>
-std::vector<std::valarray<T>> multiply(const std::vector<std::valarray<T>> &A,
-                                       const std::vector<std::valarray<T>> B) {
+std::vector<std::valarray<T>> operator*(const std::vector<std::valarray<T>> &A,
+                                        const std::vector<std::valarray<T>> B) {
   // ambil ukuran dari tiap vektor yang diberikan
   const auto shape_a = get_shape(A);
   const auto shape_b = get_shape(B);
@@ -594,8 +594,7 @@ std::vector<std::valarray<T>> multiply(const std::vector<std::valarray<T>> &A,
   for (size_t i = 0; i < shape_a.first; i++) {
     // buat baris baru untuk matriks si hasil
     // panjang baris baru sama dengan jumlah kolom dari si matriks B
-    std::valarray<T> baris;
-    baris.resize(shape_b.second);
+    std::valarray<T> baris(shape_b.second);
     for (size_t j = 0; j < shape_b.second; j++) {
       for (size_t k = 0; k < shape_a.second; k++) {
         // hitung nilai elemen matriks hasil perkalian
